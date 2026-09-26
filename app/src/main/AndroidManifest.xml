@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <queries>
+        <package android:name="com.dts.freefire" />
+        <package android:name="com.dts.freefireth" />
+        <package android:name="com.dts.freefireth.official" />
+        <package android:name="com.dts.freefiremax" />
+        <package android:name="com.dts.freefiremaxth" />
+        <package android:name="com.dts.freefiremax.official" />
+    </queries>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:theme="@style/AppTheme"
+        android:label="HEAVYy PROJECT X"
+        android:allowBackup="false"
+        android:supportsRtl="true"
+        android:icon="@drawable/heavyy_icon"
+        android:roundIcon="@drawable/heavyy_icon">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+    </application>
+
+</manifest>
