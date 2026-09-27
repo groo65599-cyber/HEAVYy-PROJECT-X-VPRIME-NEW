@@ -1,16 +1,22 @@
-name: Build HEAVYy PROJECT X V5.1 FINAL
+name: Build HEAVYy PROJECT X APK
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
+    name: Build HEAVYy PROJECT X V5.1
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Java 17
@@ -21,24 +27,54 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v4
-        with:
-          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
 
-      - name: Setup Gradle
+      - name: Install Android SDK packages
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Verify Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
+          echo "Checking Android platform..."
+          test -d "$ANDROID_SDK_ROOT/platforms/android-35"
+          echo "Checking Build Tools..."
+          test -d "$ANDROID_SDK_ROOT/build-tools/35.0.0"
+          echo "Android SDK is ready."
+
+      - name: Setup Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+          cache-disabled: true
+
+      - name: Check Java
+        run: java -version
+
+      - name: Check Gradle
+        run: gradle --version
+
+      - name: Clean project
+        run: gradle clean --stacktrace --no-daemon
 
       - name: Build Debug APK
-        run: gradle assembleDebug --stacktrace
+        run: gradle assembleDebug --stacktrace --no-daemon
 
-      - name: Rename APK
+      - name: Verify APK
+        run: |
+          test -f app/build/outputs/apk/debug/app-debug.apk
+          ls -lh app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Prepare release
         run: |
           mkdir -p release
-          cp app/build/outputs/apk/debug/app-debug.apk "release/HEAVYy PROJECT X V5.1 FINAL.apk"
+          cp app/build/outputs/apk/debug/app-debug.apk \
+            "release/HEAVYy PROJECT X V5.1.apk"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: HEAVYy-PROJECT-X-V5-1-FINAL
-          path: "release/HEAVYy PROJECT X V5.1 FINAL.apk"
+          name: HEAVYy-PROJECT-X-V5.1
+          path: release/HEAVYy PROJECT X V5.1.apk
+          if-no-files-found: error
