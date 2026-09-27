@@ -159,7 +159,7 @@ public class OverlayService extends Service {
         TextView actionsTitle=label("QUICK TOOLS",11);actionsTitle.setTypeface(null,Typeface.BOLD);actionsTitle.setTextColor(0xFF67E8F9);panel.addView(actionsTitle);
         LinearLayout colors=new LinearLayout(this);colors.setOrientation(LinearLayout.HORIZONTAL);
         int[] cs={0xFF67E8F9,0xFF22D3A5,0xFFFF4D6D,0xFFA78BFA,0xFFFFB84D,0xFFFFFF66};
-        for(int col:cs){TextView cb=label("●",22);cb.setGravity(Gravity.CENTER);cb.setTextColor(col);cb.setBackground(bg(0x101FFFFFF,0x204B4F63,12));colors.addView(cb,new LinearLayout.LayoutParams(0,dp(40),1));cb.setOnClickListener(v->{getSharedPreferences("hpx",MODE_PRIVATE).edit().putInt("overlay_color",col).apply();if(crosshair!=null)crosshair.setColor(col);});}
+        for(int col:cs){TextView cb=label("●",22);cb.setGravity(Gravity.CENTER);cb.setTextColor(col);cb.setBackground(bg(0x10FFFFFF,0x204B4F63,12));colors.addView(cb,new LinearLayout.LayoutParams(0,dp(40),1));cb.setOnClickListener(v->{getSharedPreferences("hpx",MODE_PRIVATE).edit().putInt("overlay_color",col).apply();if(crosshair!=null)crosshair.setColor(col);});}
         panel.addView(colors);
         LinearLayout tools=new LinearLayout(this);tools.setOrientation(LinearLayout.VERTICAL);
         addToolRow(tools,"VOLUME","−","+");addToolRow(tools,"BRIGHTNESS","DIM","UP");

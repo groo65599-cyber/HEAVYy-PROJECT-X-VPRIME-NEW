@@ -184,7 +184,7 @@ public class MainActivity extends Activity {
 
     void styleInput(EditText e,String hint){
         e.setHint(hint); e.setHintTextColor(0xFF777A88); e.setTextColor(Color.WHITE); e.setTextSize(14); e.setSingleLine(true);
-        e.setPadding(dp(16),0,dp(16),0); e.setBackground(round(0x181FFFFFF,0x385E5CEB,16));
+        e.setPadding(dp(16),0,dp(16),0); e.setBackground(round(0x18FFFFFF,0x385E5CEB,16));
     }
 
     void checkForUpdate(){
@@ -330,7 +330,7 @@ public class MainActivity extends Activity {
     }
 
     LinearLayout miniStat(String label,String value,int accent){
-        LinearLayout box=new LinearLayout(this); box.setOrientation(LinearLayout.VERTICAL); box.setPadding(dp(12),dp(9),dp(12),dp(8)); box.setBackground(round(0x141FFFFFF,0x244B4F63,16));
+        LinearLayout box=new LinearLayout(this); box.setOrientation(LinearLayout.VERTICAL); box.setPadding(dp(12),dp(9),dp(12),dp(8)); box.setBackground(round(0x14FFFFFF,0x244B4F63,16));
         TextView l=tv(label,9);l.setTextColor(0xFF8F93A3);box.addView(l);TextView v=tv(value,17);v.setTypeface(null,Typeface.BOLD);v.setTextColor(accent);box.addView(v);return box;
     }
     void spaceRow(LinearLayout l,int w){Space s=new Space(this);l.addView(s,new LinearLayout.LayoutParams(dp(w),1));}
@@ -436,7 +436,7 @@ public class MainActivity extends Activity {
         TextView colorTitle=tv("CROSSHAIR COLOR",10);colorTitle.setTypeface(null,Typeface.BOLD);colorTitle.setTextColor(0xFF67E8F9);o.addView(colorTitle);
         LinearLayout colors=new LinearLayout(this); colors.setGravity(Gravity.CENTER_VERTICAL);
         int[] cs={0xFF67E8F9,0xFF22D3A5,0xFFFF4D6D,0xFFA78BFA,0xFFFFB84D,0xFFFFFF66};
-        for(int col:cs){TextView b=tv("●",25);b.setGravity(Gravity.CENTER);b.setTextColor(col);b.setBackground(round(0x101FFFFFF,0x204B4F63,14));colors.addView(b,new LinearLayout.LayoutParams(0,dp(48),1));b.setOnClickListener(v->{prefs.edit().putInt("overlay_color",col).apply();Toast.makeText(this,"Crosshair color updated",Toast.LENGTH_SHORT).show();});}
+        for(int col:cs){TextView b=tv("●",25);b.setGravity(Gravity.CENTER);b.setTextColor(col);b.setBackground(round(0x10FFFFFF,0x204B4F63,14));colors.addView(b,new LinearLayout.LayoutParams(0,dp(48),1));b.setOnClickListener(v->{prefs.edit().putInt("overlay_color",col).apply();Toast.makeText(this,"Crosshair color updated",Toast.LENGTH_SHORT).show();});}
         o.addView(colors);content.addView(o);
     }
 
