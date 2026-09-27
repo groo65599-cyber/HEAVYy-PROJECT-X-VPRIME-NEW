@@ -11,6 +11,11 @@
     </queries>
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
         android:theme="@style/AppTheme"
@@ -19,6 +24,15 @@
         android:supportsRtl="true"
         android:icon="@drawable/heavyy_icon"
         android:roundIcon="@drawable/heavyy_icon">
+
+        <service
+            android:name=".OverlayService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Gaming overlay for user-configured crosshair and device monitoring" />
+        </service>
 
         <activity
             android:name=".MainActivity"

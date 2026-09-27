@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.content.ClipData;
@@ -38,7 +39,7 @@ public class MainActivity extends Activity {
     final int MAX_POWER = 700;
     final long POWER_INTERVAL = 20000L;
     final long RUN_FREE_DURATION = 60 * 60 * 1000L;
-    final int CURRENT_VERSION_CODE = 4;
+    final int CURRENT_VERSION_CODE = 7;
     final String UPDATE_CONFIG_URL = "https://raw.githubusercontent.com/groo65599-cyber/HEAVYy-PROJECT-X-VPRIME/main/update.json";
     final String UPDATE_CHANNEL_URL = "https://whatsapp.com/channel/0029Vb8jf279MF9APjV0cq25";
 
@@ -50,19 +51,20 @@ public class MainActivity extends Activity {
     }
 
     Button btn(String text){
-        Button b=new Button(this); b.setText(text); b.setTextColor(Color.WHITE); b.setTextSize(13);
-        b.setAllCaps(false); b.setBackgroundResource(R.drawable.bg_button);
-        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,dp(52));
-        p.setMargins(0,dp(6),0,dp(6)); b.setLayoutParams(p); return b;
+        Button b=new Button(this); b.setText(text); b.setTextColor(Color.WHITE); b.setTextSize(12); b.setTypeface(null,Typeface.BOLD); b.setAllCaps(false); b.setGravity(Gravity.CENTER);
+        b.setPadding(dp(10),0,dp(10),0); b.setBackground(round(0x1CFFFFFF,0x385E5CEB,16));
+        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,dp(48)); p.setMargins(0,dp(5),0,dp(5)); b.setLayoutParams(p);
+        return b;
     }
+
+    GradientDrawable round(int fill,int stroke,int radius){GradientDrawable g=new GradientDrawable();g.setColor(fill);g.setCornerRadius(dp(radius));if(stroke!=0)g.setStroke(dp(1),stroke);return g;}
 
     TextView cardTitle(String s){TextView t=tv(s,18);t.setTypeface(null,1);return t;}
 
     LinearLayout card(){
-        LinearLayout c=new LinearLayout(this); c.setOrientation(LinearLayout.VERTICAL);
-        c.setPadding(dp(18),dp(16),dp(18),dp(16)); c.setBackgroundResource(R.drawable.bg_glass);
-        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);
-        p.setMargins(0,0,0,dp(14)); c.setLayoutParams(p); return c;
+        LinearLayout c=new LinearLayout(this); c.setOrientation(LinearLayout.VERTICAL); c.setPadding(dp(18),dp(16),dp(18),dp(16));
+        c.setBackground(round(0x161B1F2B,0x253D4354,22));
+        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2); p.setMargins(0,0,0,dp(12)); c.setLayoutParams(p); return c;
     }
 
     @Override public void onCreate(Bundle b){super.onCreate(b);prefs=getSharedPreferences("hpx",MODE_PRIVATE);checkForUpdate();showLoadingSequence();}
@@ -144,18 +146,45 @@ public class MainActivity extends Activity {
     }
 
     void showLogin(){
+        FrameLayout frame=new FrameLayout(this);
+        frame.setBackgroundResource(R.drawable.bg_root);
+
+        AnimatedBackground bg=new AnimatedBackground(this);
+        frame.addView(bg,new FrameLayout.LayoutParams(-1,-1));
+
+        ScrollView scroll=new ScrollView(this);
         LinearLayout l=new LinearLayout(this); l.setOrientation(LinearLayout.VERTICAL);
-        l.setPadding(dp(28),dp(20),dp(28),dp(28)); l.setGravity(Gravity.CENTER); l.setBackgroundResource(R.drawable.bg_root);
-        Space top=new Space(this);l.addView(top,new LinearLayout.LayoutParams(1,0,1));
-        TextView logo=tv("HEAVYy",36);logo.setTypeface(null,1);
-        TextView sub=tv("PROJECT X  •  V4",15);sub.setGravity(Gravity.CENTER);
-        EditText u=new EditText(this);u.setHint("Username");u.setGravity(Gravity.CENTER);u.setTextColor(Color.WHITE);u.setHintTextColor(0xFF9E9EAA);
-        EditText p=new EditText(this);p.setHint("Password");p.setGravity(Gravity.CENTER);p.setInputType(0x81);p.setTextColor(Color.WHITE);p.setHintTextColor(0xFF9E9EAA);
-        Button login=btn("Masuk ke Dashboard");
-        l.addView(logo);l.addView(sub);space(l,18);l.addView(u);l.addView(p);l.addView(login);
-        Space bottom=new Space(this);l.addView(bottom,new LinearLayout.LayoutParams(1,0,1));
-        login.setOnClickListener(v->{String role=authenticate(u.getText().toString().trim(),p.getText().toString());if(role!=null){prefs.edit().putString("role",role).apply();showMain();}else Toast.makeText(this,"Username atau password salah",Toast.LENGTH_SHORT).show();});
-        setContentView(l);
+        l.setPadding(dp(24),dp(24),dp(24),dp(28));
+
+        ImageView logo=new ImageView(this);
+        logo.setImageResource(R.drawable.heavyy_icon); logo.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        LinearLayout.LayoutParams lpLogo=new LinearLayout.LayoutParams(dp(112),dp(112)); lpLogo.gravity=Gravity.CENTER_HORIZONTAL; l.addView(logo,lpLogo);
+
+        TextView brand=tv("HEAVYy",34); brand.setTypeface(null,Typeface.BOLD); brand.setGravity(Gravity.CENTER); l.addView(brand);
+        TextView sub=tv("PROJECT X",14); sub.setTypeface(null,Typeface.BOLD); sub.setTextColor(0xFFBCA7FF); sub.setGravity(Gravity.CENTER); l.addView(sub);
+        TextView badge=tv("PRIVATE GAMING CONTROL • V5.1",10); badge.setTextColor(0xFF67E8F9); badge.setGravity(Gravity.CENTER); l.addView(badge);
+        space(l,22);
+
+        LinearLayout panel=card(); panel.setPadding(dp(20),dp(20),dp(20),dp(20));
+        TextView title=tv("WELCOME BACK",12); title.setTypeface(null,Typeface.BOLD); title.setTextColor(0xFF67E8F9); panel.addView(title);
+        TextView desc=tv("Masuk untuk membuka dashboard gaming kamu.",13); desc.setTextColor(0xFFB9BAC6); panel.addView(desc); space(panel,12);
+
+        EditText u=new EditText(this); styleInput(u,"Username"); panel.addView(u,new LinearLayout.LayoutParams(-1,dp(54)));
+        space(panel,8);
+        EditText pw=new EditText(this); styleInput(pw,"Password"); pw.setInputType(0x81); panel.addView(pw,new LinearLayout.LayoutParams(-1,dp(54)));
+        space(panel,14);
+        Button login=btn("ENTER  •  OPEN DASHBOARD"); panel.addView(login);
+        login.setOnClickListener(v->{String role=authenticate(u.getText().toString().trim(),pw.getText().toString());if(role!=null){prefs.edit().putString("role",role).apply();showMain();}else Toast.makeText(this,"Username atau password salah",Toast.LENGTH_SHORT).show();});
+        l.addView(panel);
+        space(l,16);
+        TextView foot=tv("SECURE SESSION  •  HEAVYy PROJECT X",10); foot.setTextColor(0xFF737786); foot.setGravity(Gravity.CENTER); l.addView(foot);
+
+        scroll.addView(l); frame.addView(scroll,new FrameLayout.LayoutParams(-1,-1)); setContentView(frame);
+    }
+
+    void styleInput(EditText e,String hint){
+        e.setHint(hint); e.setHintTextColor(0xFF777A88); e.setTextColor(Color.WHITE); e.setTextSize(14); e.setSingleLine(true);
+        e.setPadding(dp(16),0,dp(16),0); e.setBackground(round(0x181FFFFFF,0x385E5CEB,16));
     }
 
     void checkForUpdate(){
@@ -224,51 +253,108 @@ public class MainActivity extends Activity {
 
     void showMain(){
         FrameLayout frame=new FrameLayout(this);
-        animatedBackground=new AnimatedBackground(this);
-        frame.addView(animatedBackground,new FrameLayout.LayoutParams(-1,-1));
-        root=new LinearLayout(this);root.setOrientation(LinearLayout.VERTICAL);root.setBackgroundColor(Color.TRANSPARENT);root.setPadding(dp(16),dp(18),dp(16),dp(8));
+        animatedBackground=new AnimatedBackground(this); frame.addView(animatedBackground,new FrameLayout.LayoutParams(-1,-1));
+        root=new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setPadding(dp(16),dp(12),dp(16),dp(8));
         frame.addView(root,new FrameLayout.LayoutParams(-1,-1));
-        LinearLayout top=new LinearLayout(this);top.setGravity(Gravity.CENTER_VERTICAL);
-        TextView title=tv("HEAVYy PROJECT X",22);title.setTypeface(null,1);roleText=tv("  •  "+role(),12);roleText.setTextColor(0xFFBFA9FF);
-        top.addView(title,new LinearLayout.LayoutParams(0,dp(55),1));top.addView(roleText);root.addView(top);
-        ScrollView sv=new ScrollView(this);content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);content.setPadding(0,dp(8),0,dp(20));sv.addView(content);root.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
-        LinearLayout nav=new LinearLayout(this);nav.setPadding(0,dp(4),0,0);
-        String[] ns={"Dashboard","Launcher","Accounts"};
-        for(String n:ns){Button x=btn(n);x.setTextSize(12);nav.addView(x,new LinearLayout.LayoutParams(0,dp(48),1));x.setOnClickListener(v->{if(n.equals("Dashboard"))dashboard();else if(n.equals("Launcher"))launcher();else accounts();});}
-        root.addView(nav);setContentView(frame);dashboard();
+
+        LinearLayout header=new LinearLayout(this); header.setGravity(Gravity.CENTER_VERTICAL); header.setPadding(dp(4),dp(4),dp(4),dp(8));
+        ImageView icon=new ImageView(this); icon.setImageResource(R.drawable.heavyy_icon); icon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        header.addView(icon,new LinearLayout.LayoutParams(dp(48),dp(48)));
+        LinearLayout htxt=new LinearLayout(this); htxt.setOrientation(LinearLayout.VERTICAL); htxt.setPadding(dp(10),0,0,0);
+        TextView title=tv("HEAVYy PROJECT X",20); title.setTypeface(null,Typeface.BOLD); htxt.addView(title);
+        roleText=tv(role()+"  •  V5.1 FINAL",10); roleText.setTextColor(0xFF67E8F9); htxt.addView(roleText); header.addView(htxt,new LinearLayout.LayoutParams(0,dp(52),1));
+        TextView dot=tv("●",18); dot.setTextColor(0xFF22D3A5); header.addView(dot);
+        root.addView(header);
+
+        LinearLayout nav=new LinearLayout(this); nav.setPadding(0,dp(4),0,dp(8));
+        String[] ns={"HOME","LAUNCH","ACCOUNTS"};
+        for(String n:ns){Button x=btn(n);x.setTextSize(10);x.setAllCaps(true);nav.addView(x,new LinearLayout.LayoutParams(0,dp(42),1));x.setOnClickListener(v->{if(n.equals("HOME"))dashboard();else if(n.equals("LAUNCH"))launcher();else accounts();});}
+        root.addView(nav);
+
+        ScrollView sv=new ScrollView(this); content=new LinearLayout(this); content.setOrientation(LinearLayout.VERTICAL); content.setPadding(0,dp(2),0,dp(22)); sv.addView(content); root.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
+        setContentView(frame); dashboard();
+    }
+
+    void heroBanner(String kicker,String title,String subtitle){
+        LinearLayout h=card(); h.setPadding(dp(20),dp(18),dp(20),dp(18));
+        TextView k=tv(kicker,10); k.setTypeface(null,Typeface.BOLD); k.setTextColor(0xFF67E8F9); h.addView(k);
+        TextView t=tv(title,25); t.setTypeface(null,Typeface.BOLD); h.addView(t);
+        TextView s=tv(subtitle,12); s.setTextColor(0xFFB8BAC7); h.addView(s); content.addView(h);
     }
 
     void clear(){content.removeAllViews();}
 
     void dashboard(){
         clear();
-        LinearLayout pc=card();pc.addView(cardTitle("Account • "+role()));powerText=tv("",14);pc.addView(powerText);
-        Button add=btn("＋ Tambahkan Power");pc.addView(add);add.setOnClickListener(v->addPower());content.addView(pc);
+        heroBanner("HEAVYy CONTROL CENTER","READY TO GAME","Performance tools • overlay • launcher dalam satu panel");
 
-        LinearLayout c=card();c.addView(cardTitle("Live Monitor"));monitorText=tv("Mengambil data perangkat…",14);c.addView(monitorText);content.addView(c);
+        LinearLayout stats=card();
+        TextView st=cardTitle("SYSTEM STATUS"); stats.addView(st);
+        LinearLayout grid=new LinearLayout(this); grid.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout a=miniStat("POWER",unlimited()?"∞":""+power()+"/700",0xFF67E8F9); LinearLayout b=miniStat("ROLE",role(),0xFFA78BFA);
+        grid.addView(a,new LinearLayout.LayoutParams(0,dp(78),1)); spaceRow(grid,8); grid.addView(b,new LinearLayout.LayoutParams(0,dp(78),1)); stats.addView(grid);
+        powerText=tv("",11); powerText.setTextColor(0xFF9CA3AF); stats.addView(powerText); content.addView(stats);
 
-        LinearLayout a=card();a.addView(cardTitle("Game Launcher"));
-        Button f=btn("▶  Run Free Fire");a.addView(f);f.setOnClickListener(v->runGameResolved("Free Fire", false));
-        Button fm=btn("▶  Run Free Fire MAX");a.addView(fm);fm.setOnClickListener(v->runGameResolved("Free Fire MAX", true));
-        if(role().equals("PRESS") || role().equals("DEVELOPER")){
-            Button cache=btn("🧹  Clear Cache FF / FF MAX"); a.addView(cache); cache.setOnClickListener(v->clearCacheMenu());
-        }
-        content.addView(a);
+        LinearLayout mon=card();
+        TextView mt=cardTitle("LIVE DEVICE"); mon.addView(mt); monitorText=tv("Mengambil data perangkat…",12); monitorText.setTextColor(0xFFCBD5E1); mon.addView(monitorText); content.addView(mon);
 
-        LinearLayout features=card();features.addView(cardTitle("V1 FEATURES"));
-        features.addView(tv("Kontrol ON/OFF untuk modul yang tampil di dashboard. Toggle ini tidak menyuntik atau mengubah proses game.",12));
-        addFeatureToggle(features,"DRAG HS V4","feature_drag",false);
-        addFeatureToggle(features,"GRAFIK MC","feature_grafik",false);
-        addFeatureToggle(features,"ANTI LAG PERFORMANCE","feature_lag",false);
-        addFeatureToggle(features,"MONITORING LIFE TIME","feature_monitor",true);
-        addFeatureToggle(features,"CROSHAIR","feature_crosshair",false);
-        content.addView(features);
+        overlayCard();
 
-        LinearLayout set=card();set.addView(cardTitle("Settings"));
-        Button settings=btn("⚙  Pengaturan Android");set.addView(settings);settings.setOnClickListener(v->startActivity(new Intent(Settings.ACTION_SETTINGS)));content.addView(set);
+        LinearLayout launch=card(); launch.addView(cardTitle("QUICK LAUNCH"));
+        Button f=btn("▶   FREE FIRE"); launch.addView(f); f.setOnClickListener(v->runGameResolved("Free Fire",false));
+        Button fm=btn("▶   FREE FIRE MAX"); launch.addView(fm); fm.setOnClickListener(v->runGameResolved("Free Fire MAX",true));
+        if(role().equals("PRESS")||role().equals("DEVELOPER")){Button cache=btn("⌫   CLEAR CACHE");launch.addView(cache);cache.setOnClickListener(v->clearCacheMenu());}
+        content.addView(launch);
 
-        if(role().equals("FREE")){LinearLayout info=card();info.addView(cardTitle("Akun FREE"));info.addView(tv("Akun FREE membutuhkan Power untuk launcher dan tidak memiliki akses Grafik MC.",13));content.addView(info);}
+        LinearLayout modes=card(); modes.addView(cardTitle("HPX PERFORMANCE MODES"));
+        modes.addView(tv("Pilih profil performa. Mode bekerja dengan pengaturan Android yang tersedia; tidak mengubah atau menyuntik proses game.",11));
+        LinearLayout modeRow=new LinearLayout(this); modeRow.setOrientation(LinearLayout.HORIZONTAL);
+        Button extreme=btn("⚡ HPX EKSTREM"); Button balance=btn("⚖ HPX BALANCE"); Button battery=btn("🔋 HPX BATTERY");
+        modeRow.addView(extreme,new LinearLayout.LayoutParams(0,dp(54),1)); spaceRow(modeRow,6); modeRow.addView(balance,new LinearLayout.LayoutParams(0,dp(54),1)); spaceRow(modeRow,6); modeRow.addView(battery,new LinearLayout.LayoutParams(0,dp(54),1));
+        modes.addView(modeRow);
+        TextView modeStatus=tv("Mode aktif: "+prefs.getString("hpx_mode","HPX BALANCE"),11); modeStatus.setTextColor(0xFF67E8F9); modes.addView(modeStatus);
+        extreme.setOnClickListener(v->{setPerformanceMode("HPX EKSTREM");modeStatus.setText("Mode aktif: "+prefs.getString("hpx_mode","HPX EKSTREM"));});
+        balance.setOnClickListener(v->{setPerformanceMode("HPX BALANCE");modeStatus.setText("Mode aktif: "+prefs.getString("hpx_mode","HPX BALANCE"));});
+        battery.setOnClickListener(v->{setPerformanceMode("HPX BATTERY");modeStatus.setText("Mode aktif: "+prefs.getString("hpx_mode","HPX BATTERY"));});
+        content.addView(modes);
+
+        LinearLayout features=card(); features.addView(cardTitle("FEATURE MODULES"));
+        addDevelopmentFeature(features,"DRAG HS V4"); addDevelopmentFeature(features,"GRAFIK MC");
+        addFeatureToggle(features,"ANTI LAG PERFORMANCE","feature_lag",false); addFeatureToggle(features,"MONITORING LIFE TIME","feature_monitor",true); addFeatureToggle(features,"CROSHAIR","feature_crosshair",false); content.addView(features);
+
+        LinearLayout set=card(); set.addView(cardTitle("SYSTEM")); Button settings=btn("⚙   ANDROID SETTINGS");set.addView(settings);settings.setOnClickListener(v->startActivity(new Intent(Settings.ACTION_SETTINGS)));
+        Button wireless=btn("⌁   WIRELESS DEBUGGING / DEVELOPER OPTIONS"); set.addView(wireless); wireless.setOnClickListener(v->{try{startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));}catch(Exception e){startActivity(new Intent(Settings.ACTION_SETTINGS));}});
+        content.addView(set);
+        if(role().equals("FREE")){LinearLayout info=card();TextView q=cardTitle("FREE ACCESS");info.addView(q);info.addView(tv("Akun FREE tetap dapat melihat fitur V1. Tombol V1 menampilkan status pengembangan dan tidak menjalankan fungsi game.",12));content.addView(info);}
         updatePowerText();updateMonitor();
+    }
+
+    LinearLayout miniStat(String label,String value,int accent){
+        LinearLayout box=new LinearLayout(this); box.setOrientation(LinearLayout.VERTICAL); box.setPadding(dp(12),dp(9),dp(12),dp(8)); box.setBackground(round(0x141FFFFFF,0x244B4F63,16));
+        TextView l=tv(label,9);l.setTextColor(0xFF8F93A3);box.addView(l);TextView v=tv(value,17);v.setTypeface(null,Typeface.BOLD);v.setTextColor(accent);box.addView(v);return box;
+    }
+    void spaceRow(LinearLayout l,int w){Space s=new Space(this);l.addView(s,new LinearLayout.LayoutParams(dp(w),1));}
+
+    void addDevelopmentFeature(LinearLayout parent,String label){
+        LinearLayout row=new LinearLayout(this); row.setGravity(Gravity.CENTER_VERTICAL); row.setPadding(0,dp(4),0,dp(4));
+        TextView name=tv(label,14); row.addView(name,new LinearLayout.LayoutParams(0,dp(52),1));
+        Button open=btn("COMING SOON"); open.setTextSize(9); row.addView(open,new LinearLayout.LayoutParams(dp(120),dp(46)));
+        open.setOnClickListener(v->showFeatureDevelopmentOverlay());
+        parent.addView(row);
+    }
+
+    void showFeatureDevelopmentOverlay(){
+        new AlertDialog.Builder(this).setTitle("HEAVYy PROJECT X").setMessage("FITUR INI DALAM MASA PENGEMBANGAN\n\nFitur akan tersedia pada update berikutnya.").setPositiveButton("OK",null).show();
+    }
+
+    void setPerformanceMode(String mode){
+        prefs.edit().putString("hpx_mode",mode).apply();
+        if(mode.equals("HPX BATTERY") && Build.VERSION.SDK_INT>=23 && Settings.System.canWrite(this)){
+            try{int old=Settings.System.getInt(getContentResolver(),Settings.System.SCREEN_BRIGHTNESS,128);prefs.edit().putInt("pre_battery_brightness",old).apply();Settings.System.putInt(getContentResolver(),Settings.System.SCREEN_BRIGHTNESS,Math.max(20,old*55/100));}catch(Exception ignored){}
+        }else if(mode.equals("HPX BALANCE") && Build.VERSION.SDK_INT>=23 && Settings.System.canWrite(this)){
+            int old=prefs.getInt("pre_battery_brightness",-1);if(old>=0){try{Settings.System.putInt(getContentResolver(),Settings.System.SCREEN_BRIGHTNESS,old);}catch(Exception ignored){}}
+        }
+        Toast.makeText(this,mode+" aktif",Toast.LENGTH_SHORT).show();
     }
 
     void addFeatureToggle(LinearLayout parent,String label,String key,boolean defaultOn){
@@ -332,6 +418,34 @@ public class MainActivity extends Activity {
     }
     String fmt(double x){return new DecimalFormat("0.00").format(x);}
 
+
+    void overlayCard(){
+        LinearLayout o=card();
+        TextView title=cardTitle("GAMING OVERLAY"); o.addView(title);
+        TextView desc=tv("Crosshair + live hardware panel. Dibuat untuk tampilan gaming yang clean dan tidak mengganggu layar.",11); desc.setTextColor(0xFF9FA4B2); o.addView(desc); space(o,10);
+
+        LinearLayout actions=new LinearLayout(this); actions.setOrientation(LinearLayout.HORIZONTAL);
+        Button perm=btn("PERMISSION"); actions.addView(perm,new LinearLayout.LayoutParams(0,dp(46),1)); spaceRow(actions,8);
+        Button start=btn("●  START"); actions.addView(start,new LinearLayout.LayoutParams(0,dp(46),1)); spaceRow(actions,8);
+        Button stop=btn("■  STOP"); actions.addView(stop,new LinearLayout.LayoutParams(0,dp(46),1)); o.addView(actions);
+        perm.setOnClickListener(v->{if(Build.VERSION.SDK_INT>=23){try{startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:"+getPackageName())));}catch(Exception e){startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION));}}});
+        start.setOnClickListener(v->startGamingOverlay()); stop.setOnClickListener(v->stopGamingOverlay());
+
+        space(o,8); TextView modules=tv("OVERLAY MODULES",10);modules.setTypeface(null,Typeface.BOLD);modules.setTextColor(0xFF67E8F9);o.addView(modules);
+        addFeatureToggle(o,"CUSTOM CROSSHAIR","overlay_crosshair",true); addFeatureToggle(o,"CPU INFORMATION","overlay_cpu",true); addFeatureToggle(o,"RAM INFORMATION","overlay_ram",true); addFeatureToggle(o,"TEMPERATURE INFORMATION","overlay_temp",true); addFeatureToggle(o,"BATTERY INFORMATION","overlay_battery",true); addFeatureToggle(o,"FPS / REFRESH RATE","overlay_fps",true); addFeatureToggle(o,"TIME INFORMATION","overlay_time",false);
+        TextView colorTitle=tv("CROSSHAIR COLOR",10);colorTitle.setTypeface(null,Typeface.BOLD);colorTitle.setTextColor(0xFF67E8F9);o.addView(colorTitle);
+        LinearLayout colors=new LinearLayout(this); colors.setGravity(Gravity.CENTER_VERTICAL);
+        int[] cs={0xFF67E8F9,0xFF22D3A5,0xFFFF4D6D,0xFFA78BFA,0xFFFFB84D,0xFFFFFF66};
+        for(int col:cs){TextView b=tv("●",25);b.setGravity(Gravity.CENTER);b.setTextColor(col);b.setBackground(round(0x101FFFFFF,0x204B4F63,14));colors.addView(b,new LinearLayout.LayoutParams(0,dp(48),1));b.setOnClickListener(v->{prefs.edit().putInt("overlay_color",col).apply();Toast.makeText(this,"Crosshair color updated",Toast.LENGTH_SHORT).show();});}
+        o.addView(colors);content.addView(o);
+    }
+
+    boolean overlayAllowed(){return Build.VERSION.SDK_INT<23 || Settings.canDrawOverlays(this);}
+    void startGamingOverlay(){
+        if(!overlayAllowed()){Toast.makeText(this,"Izinkan 'tampil di atas aplikasi' terlebih dahulu.",Toast.LENGTH_LONG).show();try{startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:"+getPackageName())));}catch(Exception ignored){}return;}
+        Intent i=new Intent(this,OverlayService.class);if(Build.VERSION.SDK_INT>=26)startForegroundService(i);else startService(i);Toast.makeText(this,"Gaming Overlay aktif",Toast.LENGTH_SHORT).show();
+    }
+    void stopGamingOverlay(){stopService(new Intent(this,OverlayService.class));Toast.makeText(this,"Gaming Overlay dihentikan",Toast.LENGTH_SHORT).show();}
 
     void clearCacheMenu(){
         final String[] names={"Free Fire","Free Fire MAX"};
