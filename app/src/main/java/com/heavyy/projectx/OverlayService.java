@@ -199,7 +199,7 @@ public class OverlayService extends Service {
         if(monitorHud==null)return;StringBuilder s=new StringBuilder();for(String k:monitorKeys){String value=valueFor(k);if(monitorValueViews.containsKey(k))monitorValueViews.get(k).setText(value);if(s.length()>0)s.append("\n");s.append(k).append("  ").append(value);}monitorHud.setText(s.toString());monitorHud.setVisibility(monitorKeys.isEmpty()?View.GONE:View.VISIBLE);
     }
 
-    Runnable tick=()->{if(monitorHud==null)return;updateHud();if(crosshair!=null){SharedPreferences p=getSharedPreferences("hpx",MODE_PRIVATE);crosshair.setVisibility(p.getBoolean("overlay_crosshair",true)?View.VISIBLE:View.GONE);crosshair.setColor(p.getInt("overlay_color",0xFF20D7A0));}h.postDelayed(tick,1000);};
+    final Runnable[] tick={null}; tick[0]=()->{if(monitorHud==null)return;updateHud();if(crosshair!=null){SharedPreferences p=getSharedPreferences("hpx",MODE_PRIVATE);crosshair.setVisibility(p.getBoolean("overlay_crosshair",true)?View.VISIBLE:View.GONE);crosshair.setColor(p.getInt("overlay_color",0xFF20D7A0));}h.postDelayed(tick[0],1000);};
 
     String valueFor(String key){
         switch(key){
